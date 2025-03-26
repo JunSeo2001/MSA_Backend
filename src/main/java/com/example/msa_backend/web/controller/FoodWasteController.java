@@ -1,24 +1,33 @@
 package com.example.msa_backend.web.controller;
 
 
+import com.example.msa_backend.service.FoodWaste.FoodWasteService;
+import com.example.msa_backend.web.dto.food.FoodWasteRequestDTO;
+import com.example.msa_backend.web.dto.food.FoodWasteResponseDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/foodWaste")
 @RequiredArgsConstructor
 public class FoodWasteController {
-    private final foodWasteService FoodWasteService;
+    private final FoodWasteService foodWasteService;
 
     @PostMapping("/trash")
-    public ApiResponse<AdminResponseDTO.DeletedMemberListDTO> deleteInactiveMembers() {
-        // 관리자 인증
-        if (!adminService.getIsAdmin()) {
-            throw new GeneralException(ErrorStatus._NOT_ADMIN);
-        }
-        AdminResponseDTO.DeletedMemberListDTO deletedMemberListDTO = adminService.deleteInactiveMembers();
-        return ApiResponse.onSuccess(SuccessStatus._MEMBER_DELETED, deletedMemberListDTO);
+    public FoodWasteResponseDTO.FoodWasteDTO postWaste (
+            @RequestBody FoodWasteRequestDTO.addDTO foodWasteDTO
+    ) {
+        return foodWasteService.postFoodWaste(foodWasteDTO);
+    }
+
+    @GetMapping("/data")
+    public List<FoodWasteResponseDTO.FoodWasteDTO> getWaste (
+//            @RequestBody FoodWasteRequestDTO.addDTO foodWasteDTO
+    ) {
+
+        return foodWasteService.getFoodWastes();
     }
 }
