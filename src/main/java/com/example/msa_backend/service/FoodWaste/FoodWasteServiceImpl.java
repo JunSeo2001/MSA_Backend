@@ -2,6 +2,7 @@ package com.example.msa_backend.service.FoodWaste;
 
 import com.example.msa_backend.converter.FoodWasteConverter;
 import com.example.msa_backend.domain.FoodWaste;
+import com.example.msa_backend.domain.enums.MealType;
 import com.example.msa_backend.repository.FoodWasteRepository;
 import com.example.msa_backend.web.dto.food.FoodWasteRequestDTO;
 import com.example.msa_backend.web.dto.food.FoodWasteResponseDTO;
@@ -32,15 +33,34 @@ public class FoodWasteServiceImpl implements FoodWasteService {
     }
 
     @Override
-    public List<FoodWasteResponseDTO.FoodWasteDTO> getFoodWastes() {
-
+    public List<FoodWasteResponseDTO.FoodWasteDTO> getFoodWastes(String periods, String mealType) {
         LocalDate today = LocalDate.now();
-        LocalDate weekAgo = today.minusDays(6); // 오늘 포함 7일
 
-        List<FoodWaste> recentWeek = foodWasteRepository.findAllByDateBetween(weekAgo, today);
+        LocalDate fromDate = switch (periods.toLowerCase()) {
+            case "week" -> today.minusDays(6);     // 오늘 포함 7일
+            case "month" -> today.minusDays(29);   // 오늘 포함 30일
+            case "quarter" -> today.minusDays(89); // 오늘 포함 90일
+            default -> throw new IllegalArgumentException("Invalid period: " + periods);
+        };
 
-        return recentWeek.stream()
-                .map(FoodWasteResponseDTO.FoodWasteDTO::toDTO) // DTO로 변환
+        // 날짜 범위 조회
+        List<FoodWaste> filtered = foodWasteRepository.findAllByDateBetween(fromDate, today);
+
+        // mealType 필터 적용
+        if (mealType != null && !mealType.isEmpty()) {
+            try {
+                MealType filterType = MealType.valueOf(mealType.toUpperCase());
+                filtered = filtered.stream()
+                        .filter(fw -> fw.getMealType() == filterType)
+                        .collect(Collectors.toList());
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid mealType: " + mealType);
+            }
+        }
+
+        // DTO로 변환
+        return filtered.stream()
+                .map(FoodWasteResponseDTO.FoodWasteDTO::toDTO)
                 .collect(Collectors.toList());
     }
 }

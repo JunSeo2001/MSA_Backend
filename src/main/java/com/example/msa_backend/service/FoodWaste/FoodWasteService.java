@@ -9,6 +9,5 @@ public interface FoodWasteService {
 
     FoodWasteResponseDTO.FoodWasteDTO postFoodWaste(FoodWasteRequestDTO.addDTO foodWasteRequestDTO);
 
-    List<FoodWasteResponseDTO.FoodWasteDTO> getFoodWastes();
-
+    List<FoodWasteResponseDTO.FoodWasteDTO> getFoodWastes(String periods, String mealType);
 }

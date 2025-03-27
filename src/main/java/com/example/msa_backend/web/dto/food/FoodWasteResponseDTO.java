@@ -1,6 +1,7 @@
 package com.example.msa_backend.web.dto.food;
 
 import com.example.msa_backend.domain.FoodWaste;
+import com.example.msa_backend.domain.enums.MealType;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,13 +18,15 @@ public class FoodWasteResponseDTO {
     public static class FoodWasteDTO {
         private final Long id;
         private final LocalDate date;
-        private final Long wasteAmount;
+        private final Double amount;
+        private final MealType mealType;
 
         public static FoodWasteDTO toDTO(FoodWaste waste) {
             return FoodWasteDTO.builder()
                     .id(waste.getId())
                     .date(waste.getDate())
-                    .wasteAmount(waste.getWasteAmount())
+                    .amount(waste.getAmount())
+                    .mealType(waste.getMealType())
                     .build();
         }
     }
