@@ -1,13 +1,13 @@
 package com.example.msa_backend.domain;
 
 
+import com.example.msa_backend.domain.enums.MealType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
 import java.time.LocalDate;
 
 @Entity
@@ -29,6 +29,10 @@ public class FoodWaste {
     private LocalDate date;
 
     @Column(nullable = false)
-    private Long wasteAmount;
+    private Double amount;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "meal_type", nullable = false)
+    private MealType mealType;
 
 }

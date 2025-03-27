@@ -11,23 +11,23 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/foodWaste")
+@RequestMapping("/waste")
 @RequiredArgsConstructor
 public class FoodWasteController {
     private final FoodWasteService foodWasteService;
 
-    @PostMapping("/trash")
+    @PostMapping()
     public FoodWasteResponseDTO.FoodWasteDTO postWaste (
             @RequestBody FoodWasteRequestDTO.addDTO foodWasteDTO
     ) {
         return foodWasteService.postFoodWaste(foodWasteDTO);
     }
 
-    @GetMapping("/data")
-    public List<FoodWasteResponseDTO.FoodWasteDTO> getWaste (
-//            @RequestBody FoodWasteRequestDTO.addDTO foodWasteDTO
+    @GetMapping("/recent")
+    public List<FoodWasteResponseDTO.FoodWasteDTO> getWaste(
+            @RequestParam String periods,
+            @RequestParam String mealType
     ) {
-
-        return foodWasteService.getFoodWastes();
+        return foodWasteService.getFoodWastes(periods, mealType);
     }
 }
